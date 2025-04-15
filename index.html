@@ -32,14 +32,10 @@
             seamless-poster shadow-intensity="1" camera-controls></model-viewer>
 
           <form id="infoForm" class="mt-4">
-            <div class="form-group">
-              <label for="name">Họ và tên</label>
-              <input type="text" class="form-control" id="name" placeholder="Nhập họ tên" required />
-            </div>
-            <div class="form-group">
-              <label for="phone">Số điện thoại</label>
-              <input type="tel" class="form-control" id="phone" placeholder="Nhập số điện thoại" required />
-            </div>
+            <input type="text" name="Họ và tên" class="form-control" id="name" placeholder="Nhập họ tên" required />
+            <input type="tel" name="Số điện thoại" class="form-control" id="phone" placeholder="Nhập số điện thoại"
+              required />
+
             <button type="submit" class="btn btn-primary">Gửi</button>
           </form>
         </div>
@@ -127,24 +123,25 @@
       const formData = new FormData(form);
 
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbwMTtt-KtWQwnpERJ6lwHhBd4dug4ZIkkw8lQ7AGoSZMcv60yyK9az20oknYwe3p8E5zw/exec", {
-          method: "POST",
-          body: formData,
+        const queryString = new URLSearchParams(formData).toString();
+
+        const url = `https://script.google.com/macros/s/AKfycbz3CXyeWsXd14ZWDaud7Zg5bnyN1qF-mfFnS4LIIFj8ewj6zjBO6r8qM1xhfheldYaLZA/exec?${queryString}`;
+
+        const response = await fetch(url, {
+          method: "GET"
         });
 
-        const text = await response.text();
-        if (response.ok) {
-          alert("Gửi thành công!");
-          $('#login_modal').modal('hide');
-          form.reset();
-        } else {
-          alert("Có lỗi xảy ra khi gửi: " + text);
-        }
+        const result = await response.text();
+        console.log("Kết quả:", result);
+        alert("Gửi thành công!");
+        $("#login_modal").modal("hide");
+        form.reset();
       } catch (error) {
-        alert("Lỗi mạng hoặc server không phản hồi.");
-        console.error(error);
+        console.error("Lỗi gửi form:", error);
+        alert("Có lỗi xảy ra khi gửi. Vui lòng thử lại.");
       }
     });
+
 
     // const scriptURL = "https://script.google.com/macros/s/AKfycbwMTtt-KtWQwnpERJ6lwHhBd4dug4ZIkkw8lQ7AGoSZMcv60yyK9az20oknYwe3p8E5zw/exec"; // dán link web app của bạn vào đây
 
