@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://pchen66.github.io/js/three/three.min.js"></script>
+    <script src="https://pchen66.github.io/js/panolens/panolens.min.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
+  </head>
+
+  <body>
+    <div id="container"></div>
+    <!-- <button type="button" id="btn_location_1" class="btn btn-outline-primary">
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        data-prefix="fas"
+        data-icon="map-marker-alt"
+        class="svg-inline--fa fa-map-marker-alt fa-w-12 fa-lg"
+        role="img"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 384 512"
+        style="padding: 0px 6px 0px 0px;"
+      >
+        <path
+          fill="currentColor"
+          d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"
+        ></path></svg
+      >全景導覽地圖
+    </button> -->
+
+    <button type="button" id="btn_location_2" class="btn btn-outline-primary">
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        data-prefix="fas"
+        data-icon="map-marker-alt"
+        class="svg-inline--fa fa-map-marker-alt fa-w-12 fa-lg"
+        role="img"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 384 512"
+        style="padding: 0px 6px 0px 0px;"
+      >
+        <path
+          fill="currentColor"
+          d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"
+        ></path></svg
+      >全景導覽地圖
+    </button>
+
+    <button class="home_icon">
+      <img
+        class="home_icon_img"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAfCAYAAACVgY94AAAACXBIWXMAAAsSAAALEgHS3X78AAABBklEQVRYhe2Y2w2CMBSGf4zvsom4gZvYERxBN8ENGAE36AY6gkxwDMlpolza0kORCF/SF3r7eqE9aUJEmDObWdstSTAFkAMgTiV/k1PvQWFKiUhTG815ovZjyRleRJRJ+pAsccZLubeU2XGZY3AvgSPLeHaGoKZa4hA5wyW2oBLIGfJYgkoo9knp+4f/Qs7gdQz5yOUR5AzOY8gVLNS3wyn4iPCjst06LsGpQp2kL8P3oK7Gc2lxt2VuHZUPPP1PAI8IYorb7sUlqEeWamKVw5LiwStv9GYSs4b8UlZBKauglL8SvPV8r+/pYmAdcKTkZOjbzLkjNCocV2JXHW0Z1Bfr45EIAG8j3F1Gk+VEuwAAAABJRU5ErkJggg=="
+      />
+    </button>
+
+    <!-- The Modal -->
+    <div class="modal fade" id="login_modal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Modal Heading</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <model-viewer
+              src="UV650_Model.glb"
+              ar
+              ar-modes="webxr scene-viewer quick-look"
+              poster="monitor.png"
+              seamless-poster
+              shadow-intensity="1"
+              camera-controls
+            ></model-viewer>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var panorama, viewer, container, infospot;
+      var containerBaseWidth = 700;
+      var containerBaseHeight = 400;
+      var deltaSize = 100;
+
+      container = document.querySelector("#container");
+      panorama = new PANOLENS.ImagePanorama("1.jpg");
+      panorama2 = new PANOLENS.ImagePanorama("image2.jpg");
+      panorama3 = new PANOLENS.ImagePanorama("image3.jpg");
+      panorama4 = new PANOLENS.ImagePanorama("image4.jpg");
+
+      //infospot = new PANOLENS.Infospot(350, PANOLENS.DataImage.Info);
+      infospot = new PANOLENS.Infospot(350, "load_more.png");
+
+      // console.log(infospot.setContainer("<h1>My First Heading</h1>"));
+      console.log(infospot.getContainer());
+
+      infospot.position.set(0, 0, -5000);
+      infospot.addHoverText("Hello Panolens", 50);
+      infospot.addEventListener("click", function () {
+        $("#login_modal").modal("show");
+      });
+      panorama.add(infospot);
+
+      viewer = new PANOLENS.Viewer({ container: container });
+      viewer.add(panorama);
+      viewer.add(panorama2);
+      viewer.add(panorama3);
+      viewer.add(panorama4);
+
+      panorama.link(
+        panorama2,
+        new THREE.Vector3(0, -2000, -5000),
+        400,
+        "obv-icon-1.png"
+      );
+      panorama.link(
+        panorama3,
+        new THREE.Vector3(-1000, -2000, -5000),
+        400,
+        "obv-icon-2.png"
+      );
+      panorama.link(
+        panorama4,
+        new THREE.Vector3(1000, -2000, -5000),
+        400,
+        "obv-icon-3.png"
+      );
+
+      panorama2.link(panorama, new THREE.Vector3(0, -2000, -5000));
+      panorama3.link(panorama, new THREE.Vector3(0, -2000, -5000));
+      panorama4.link(panorama, new THREE.Vector3(0, -2000, -5000));
+    </script>
+  </body>
+</html>
